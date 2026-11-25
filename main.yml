@@ -1,0 +1,43 @@
+name: CI/CD with Secrets Example
+
+# This workflow demonstrates how to use secrets in GitHub Actions.
+# It's a simplified example for illustrating the concept of secure secret management.
+# In a real-world scenario, these secrets would be sensitive data like API keys or passwords.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Use a secret for an API call (simulated)
+      env:
+        # The MY_API_KEY secret is defined in the GitHub repository's settings.
+        # It is automatically masked in logs for security.
+        API_KEY: ${{ secrets.MY_API_KEY }}
+      run: |
+        echo "Simulating an API call using a secret..."
+        # In a real scenario, you would use this API_KEY to authenticate with an external service.
+        # For example: curl -H "Authorization: Bearer $API_KEY" https://api.example.com/data
+        echo "API Key is available (but not printed for security)."
+
+    - name: Use another secret for configuration
+      env:
+        # Another example of using a secret for configuration settings.
+        DB_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      run: |
+        echo "Accessing database configuration..."
+        # You could use this DB_PASSWORD to connect to a database.
+        echo "Database password is set (but not printed)."
+
+    - name: Display a non-secret environment variable
+      run: |
+        echo "This is a regular environment variable: $GITHUB_SHA"
